@@ -17,11 +17,11 @@ import {
   MessageSquare,
   FileText,
   ChevronLeft,
-  ChevronRight,
   User,
   Moon
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { ThemeToggle } from "./ThemeToggle";
 
 const primaryNavItems = [
   { title: "Today", href: "/dashboard", icon: LayoutDashboard },
@@ -151,18 +151,21 @@ export function Sidebar() {
           {!collapsed && <span className="truncate">Settings</span>}
         </Link>
         
-        {/* User Profile / Theme bottom section */}
-        <div className={`mt-2 flex items-center border border-border/50 rounded-lg bg-background p-2 transition-all ${collapsed ? 'justify-center' : 'gap-3'}`}>
-          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-            <User className="h-4 w-4 text-primary" />
-          </div>
-          {!collapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{session?.user?.name || "User"}</p>
-              <p className="text-[10px] text-muted-foreground truncate">Score: 87</p>
+        <ThemeToggle collapsed={collapsed} />
+          
+          <div className={`mt-2 flex items-center rounded-lg bg-sidebar-accent/50 p-2 
+            ${collapsed ? 'justify-center' : 'gap-3'}`}
+          >
+            <div className="h-8 w-8 shrink-0 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary">
+              {session?.user?.name?.[0]?.toUpperCase() || 'U'}
             </div>
-          )}
-        </div>
+            {!collapsed && (
+              <div className="flex flex-col min-w-0">
+                <span className="truncate text-sm font-medium text-sidebar-foreground">{session?.user?.name}</span>
+                <span className="truncate text-xs text-sidebar-foreground/50">{session?.user?.email}</span>
+              </div>
+            )}
+          </div>
       </div>
     </aside>
   );
