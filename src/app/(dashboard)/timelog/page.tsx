@@ -1,26 +1,24 @@
 import { getTimeLogs } from "@/actions/timelog.actions";
 import TimerClient from "./TimerClient";
-import TimeLogHistory from "./TimeLogHistory";
-import CreateLogModal from "./CreateLogModal";
+import DailyTimelineClient from "./DailyTimelineClient";
 
 export default async function TimeLogPage() {
   const logs = await getTimeLogs();
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Time & Focus</h1>
-          <p className="text-muted-foreground mt-2">
-            Track where your time goes.
-          </p>
-        </div>
-        <CreateLogModal />
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Time Log</h1>
+        <p className="text-muted-foreground mt-2">
+          Track exactly where your 24 hours go. Spot the waste, maximize the productive.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <DailyTimelineClient initialLogs={logs} />
+      
+      <div className="pt-8 border-t">
+        <h2 className="text-2xl font-bold tracking-tight mb-6">Focus Timer</h2>
         <TimerClient />
-        <TimeLogHistory logs={logs} />
       </div>
     </div>
   );

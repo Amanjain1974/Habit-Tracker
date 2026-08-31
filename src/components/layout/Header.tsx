@@ -13,6 +13,11 @@ export function Header() {
         <h1 className="md:hidden text-xl font-bold tracking-tight text-primary">FINISH IT</h1>
       </div>
       <div className="flex items-center gap-4">
+        <div className="hidden sm:flex items-center gap-2 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-xs font-bold">
+          <span>Level 5</span>
+          <span className="w-1 h-1 rounded-full bg-primary" />
+          <span>840 XP</span>
+        </div>
         {session?.user && (
           <div className="text-sm font-medium text-muted-foreground hidden sm:block">
             {session.user.name || session.user.email}

@@ -11,7 +11,9 @@ import {
   Clock, 
   BarChart3,
   LogOut,
-  Settings
+  Settings,
+  MessageSquare,
+  FileText
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -24,6 +26,8 @@ const navItems = [
   { title: "Goals", href: "/goals", icon: Target },
   { title: "Time Log", href: "/timelog", icon: Clock },
   { title: "Analytics", href: "/analytics", icon: BarChart3 },
+  { title: "Daily Review", href: "/review", icon: MessageSquare },
+  { title: "Notes", href: "/notes", icon: FileText },
 ];
 
 export function Sidebar() {
