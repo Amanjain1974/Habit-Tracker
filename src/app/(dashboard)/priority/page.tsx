@@ -7,11 +7,11 @@ export default async function PriorityPage() {
   const activeTasks = allTasks.filter(t => t.status !== "COMPLETED" && t.status !== "CANCELLED");
 
   return (
-    <div className="space-y-6 h-full flex flex-col">
+    <div className="h-full flex flex-col space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Priority Matrix</h1>
-        <p className="text-muted-foreground mt-2">
-          Organize your tasks based on Importance and Urgency.
+        <h1 className="text-3xl font-extrabold tracking-tight">Priority Matrix</h1>
+        <p className="text-muted-foreground mt-1">
+          Drag and drop tasks to organize by urgency and importance. Do what matters first.
         </p>
       </div>
 
