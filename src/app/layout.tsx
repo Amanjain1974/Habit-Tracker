@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 import { CommandPalette } from "@/components/layout/CommandPalette";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <Providers>
           {children}
           <CommandPalette />
+          <Toaster />
         </Providers>
       </body>
     </html>
