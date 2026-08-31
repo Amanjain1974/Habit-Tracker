@@ -245,7 +245,7 @@ export default function InteractiveAnalyticsClient({
                     ))}
                   </tr>
                   <tr>
-                    <td className="p-2 border font-semibold text-left text-muted-foreground">GOAL</td>
+                    <td className="p-2 border font-semibold text-left text-muted-foreground">POSSIBLE (Habits × Days)</td>
                     {weeklyStats.map(w => (
                       <td key={w?.week} className="p-2 border text-muted-foreground">{w?.goal}</td>
                     ))}

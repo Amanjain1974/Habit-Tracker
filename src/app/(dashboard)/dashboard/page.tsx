@@ -3,10 +3,11 @@ import { getHabits } from "@/actions/habit.actions";
 import { getTimeLogs } from "@/actions/timelog.actions";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { CheckCircle2, Flame, Target } from "lucide-react";
+import Link from "next/link";
 import { format, isSameDay } from "date-fns";
 import TopPrioritiesClient from "./TopPrioritiesClient";
-import Link from "next/link";
-import { ArrowRight, Flame } from "lucide-react";
+import HeroClient from "./HeroClient";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -22,19 +23,21 @@ export default async function DashboardPage() {
   // Task Stats
   const activeTasks = tasks.filter(t => t.status !== "COMPLETED" && t.status !== "CANCELLED");
   const completedTasks = tasks.filter(t => t.status === "COMPLETED" && t.completedAt && isSameDay(new Date(t.completedAt), today));
+  const finishRate = activeTasks.length + completedTasks.length > 0 
+    ? Math.round((completedTasks.length / (activeTasks.length + completedTasks.length)) * 100) 
+    : 0;
   
-  // Top 3 Priorities (Important & Urgent -> Column 1)
+  // Top Priorities
   const topPriorities = activeTasks.filter(t => t.matrixColumn === 1).slice(0, 3);
   if (topPriorities.length < 3) {
     const col2 = activeTasks.filter(t => t.matrixColumn === 2);
     topPriorities.push(...col2.slice(0, 3 - topPriorities.length));
   }
 
-  // Habit Stats (Completed today)
+  // Habit Stats
   const todayHabitsCompleted = habits.filter(h => 
     h.logs.some(log => isSameDay(new Date(log.date), today) && log.completed)
   ).length;
-  
   const habitPercentage = habits.length > 0 ? Math.round((todayHabitsCompleted / habits.length) * 100) : 0;
 
   // Time Stats
@@ -43,98 +46,79 @@ export default async function DashboardPage() {
   const focusTimeHours = Math.floor(focusTimeMins / 60);
   const focusTimeRemainingMins = focusTimeMins % 60;
 
-  const totalPlannedToday = activeTasks.length + completedTasks.length;
-  const completionPercentage = totalPlannedToday > 0 ? Math.round((completedTasks.length / totalPlannedToday) * 100) : 0;
-
-  const hour = new Date().getHours();
-  let greeting = "Good evening";
-  if (hour < 12) greeting = "Good morning";
-  else if (hour < 17) greeting = "Good afternoon";
-
   const firstName = session?.user?.name?.split(" ")[0] || "User";
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
+  // Overall Productivity Score (Mocked for hero visualization)
+  const productivityScore = Math.min(100, Math.round((finishRate + habitPercentage + (focusTimeMins > 120 ? 100 : (focusTimeMins/120)*100)) / 3)) || 0;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-12 pt-4">
+    <div className="space-y-12 pb-12 max-w-6xl mx-auto overflow-x-hidden">
       
-      {/* HEADER SECTION - Minimal and focused */}
-      <div className="space-y-6 border-b pb-8">
-        <div>
-          <p className="text-muted-foreground font-medium mb-1">{format(today, "EEEE, MMMM do")}</p>
-          <h1 className="text-4xl font-extrabold tracking-tight">
-            {greeting}, {firstName}.
-          </h1>
-          <p className="text-xl text-muted-foreground mt-2">What's worth finishing today?</p>
-        </div>
+      {/* 3D HERO SECTION */}
+      <HeroClient 
+        greeting={greeting} 
+        firstName={firstName} 
+        activeTaskCount={activeTasks.length} 
+        finishRate={finishRate} 
+      />
 
-        <div className="flex items-center gap-4">
-          <div className="flex-1 max-w-sm">
-            <div className="flex justify-between text-sm font-medium mb-2">
-              <span>Today's Progress</span>
-              <span className="text-primary">{completedTasks.length} / {totalPlannedToday}</span>
-            </div>
-            <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
-                style={{ width: `${completionPercentage}%` }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* TOP PRIORITIES - The most important section */}
-      <div>
+      {/* TOP PRIORITIES */}
+      <div className="animate-fade-in-up stagger-2">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            Finish These First
+          <h2 className="text-xl font-bold flex items-center gap-2 text-foreground">
+            <Flame className="h-5 w-5 text-primary" /> Finish These First
           </h2>
-          <Link href="/priority" className="text-sm font-medium text-muted-foreground hover:text-primary flex items-center gap-1 group transition-colors">
-            Matrix <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+          <Link href="/priority" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+            Command Center →
           </Link>
         </div>
-        
-        <TopPrioritiesClient initialPriorities={topPriorities} />
+        <div className="p-1">
+          <TopPrioritiesClient initialPriorities={topPriorities} />
+        </div>
       </div>
 
-      {/* SECONDARY INSIGHTS - Clean, text-heavy, NOT boxed in heavy cards */}
-      <div className="grid md:grid-cols-2 gap-12 pt-8 border-t">
-        {/* HABITS */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Daily Routines</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-end">
-              <span className="text-4xl font-bold">{habitPercentage}%</span>
-              <span className="text-muted-foreground font-medium mb-1">{todayHabitsCompleted} of {habits.length} habits done</span>
-            </div>
-            <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
-              <div className="h-full bg-foreground rounded-full transition-all duration-1000" style={{ width: `${habitPercentage}%` }} />
-            </div>
-            <Link href="/habits" className="inline-flex text-sm font-medium text-muted-foreground hover:text-foreground">
-              Review habits →
-            </Link>
+      {/* SECONDARY METRICS */}
+      <div className="grid md:grid-cols-3 gap-6 animate-fade-in-up stagger-3">
+        {/* Habit Card */}
+        <div className="rounded-2xl p-6 bg-card border border-border/50 hover-tilt flex flex-col justify-between">
+          <div>
+            <h3 className="font-semibold text-sm text-muted-foreground tracking-wide uppercase mb-1">Consistency</h3>
+            <p className="text-3xl font-bold">{habitPercentage}%</p>
+          </div>
+          <div className="mt-6 w-full bg-secondary rounded-full h-1.5 overflow-hidden">
+            <div className="bg-gradient-to-r from-primary to-[#22D3EE] h-full rounded-full" style={{ width: `${habitPercentage}%`, transition: 'width 1s ease-out' }} />
           </div>
         </div>
 
-        {/* FOCUS */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Deep Work</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-end">
-              <span className="text-4xl font-bold">{focusTimeHours}<span className="text-2xl text-muted-foreground">h</span> {focusTimeRemainingMins}<span className="text-2xl text-muted-foreground">m</span></span>
-              <span className="text-muted-foreground font-medium mb-1">focused today</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {focusTimeMins === 0 
-                ? "You haven't logged any deep work yet. Start a 25-minute Pomodoro session to build momentum."
-                : "Great job dedicating time to deep work. Quality over quantity."}
+        {/* Focus Card */}
+        <div className="rounded-2xl p-6 bg-card border border-border/50 hover-tilt flex flex-col justify-between">
+          <div>
+            <h3 className="font-semibold text-sm text-muted-foreground tracking-wide uppercase mb-1">Deep Work</h3>
+            <p className="text-3xl font-bold">{focusTimeHours}<span className="text-lg text-muted-foreground font-medium">h</span> {focusTimeRemainingMins}<span className="text-lg text-muted-foreground font-medium">m</span></p>
+          </div>
+          <div className="mt-6 flex items-center gap-2">
+            <div className={`h-2 w-2 rounded-full ${focusTimeMins > 0 ? 'bg-success animate-pulse-glow' : 'bg-muted-foreground'}`} />
+            <span className="text-xs font-medium text-muted-foreground">{focusTimeMins > 0 ? 'Active Focus Today' : 'Awaiting Session'}</span>
+          </div>
+        </div>
+
+        {/* Coach Insight */}
+        <div className="rounded-2xl p-6 bg-primary/5 border border-primary/20 hover-tilt flex flex-col justify-between relative overflow-hidden">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl" />
+          <div>
+            <h3 className="font-semibold text-sm text-primary tracking-wide uppercase mb-2">Coach Insight</h3>
+            <p className="text-sm font-medium leading-relaxed">
+              {finishRate > 80 ? "Outstanding momentum. Rest is productive too." 
+                : "Try breaking your top priority into a 25-minute focus session."}
             </p>
-            <Link href="/timelog" className="inline-flex text-sm font-medium text-muted-foreground hover:text-foreground">
-              Start timer →
-            </Link>
           </div>
+          <Link href="/review" className="mt-4 text-xs font-bold text-primary hover:underline">
+            View full analysis →
+          </Link>
         </div>
       </div>
-
     </div>
   );
 }

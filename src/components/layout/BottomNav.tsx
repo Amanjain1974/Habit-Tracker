@@ -49,10 +49,10 @@ export function BottomNav() {
           {/* MORE MENU */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <button className="flex flex-col items-center justify-center w-full h-full space-y-1 text-muted-foreground hover:text-foreground transition-colors">
+              <div role="button" className="flex flex-col items-center justify-center w-full h-full space-y-1 text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
                 <Menu className="h-5 w-5" />
                 <span className="text-[10px] font-medium">More</span>
-              </button>
+              </div>
             </SheetTrigger>
             <SheetContent side="bottom" className="rounded-t-2xl px-4 pt-6 pb-8 border-t-0">
               <SheetHeader className="text-left mb-6">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { 
   LayoutDashboard, 
   CheckSquare, 
@@ -82,16 +83,24 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`group flex items-center rounded-lg text-sm font-medium transition-all duration-200 
-                  ${collapsed ? 'justify-center py-3' : 'px-3 py-2 gap-3'}
+                className={`group relative flex items-center rounded-lg text-sm font-medium transition-all duration-200 
+                  ${collapsed ? 'justify-center py-3' : 'px-3 py-2.5 gap-3'}
                   ${isActive 
-                    ? "bg-primary/10 text-primary shadow-sm" 
-                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    ? "text-primary shadow-sm" 
+                    : "text-sidebar-foreground/70 hover:text-sidebar-accent-foreground"
                   }`}
                 title={collapsed ? item.title : undefined}
               >
-                <item.icon className={`shrink-0 ${collapsed ? 'h-5 w-5' : 'h-4 w-4'} ${isActive ? 'text-primary' : 'text-sidebar-foreground/50 group-hover:text-sidebar-accent-foreground'}`} />
-                {!collapsed && <span className="truncate">{item.title}</span>}
+                {isActive && (
+                  <motion.div 
+                    layoutId="activeSidebarTab" 
+                    className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-lg z-0" 
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <item.icon className={`shrink-0 relative z-10 transition-transform group-hover:scale-110 ${collapsed ? 'h-5 w-5' : 'h-4 w-4'} ${isActive ? 'text-primary' : 'text-sidebar-foreground/50'}`} />
+                {!collapsed && <span className="truncate relative z-10">{item.title}</span>}
               </Link>
             );
           })}
@@ -106,16 +115,24 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`group flex items-center rounded-lg text-sm font-medium transition-all duration-200
-                  ${collapsed ? 'justify-center py-3' : 'px-3 py-2 gap-3'}
+                className={`group relative flex items-center rounded-lg text-sm font-medium transition-all duration-200
+                  ${collapsed ? 'justify-center py-3' : 'px-3 py-2.5 gap-3'}
                   ${isActive 
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    ? "text-primary" 
+                    : "text-sidebar-foreground/70 hover:text-sidebar-accent-foreground"
                   }`}
                 title={collapsed ? item.title : undefined}
               >
-                <item.icon className={`shrink-0 ${collapsed ? 'h-5 w-5' : 'h-4 w-4'} ${isActive ? 'text-sidebar-accent-foreground' : 'text-sidebar-foreground/50 group-hover:text-sidebar-accent-foreground'}`} />
-                {!collapsed && <span className="truncate">{item.title}</span>}
+                {isActive && (
+                  <motion.div 
+                    layoutId="activeSidebarTab" 
+                    className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-lg z-0" 
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <item.icon className={`shrink-0 relative z-10 transition-transform group-hover:scale-110 ${collapsed ? 'h-5 w-5' : 'h-4 w-4'} ${isActive ? 'text-primary' : 'text-sidebar-foreground/50'}`} />
+                {!collapsed && <span className="truncate relative z-10">{item.title}</span>}
               </Link>
             );
           })}
