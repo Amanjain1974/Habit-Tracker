@@ -27,6 +27,7 @@ export async function createTask(data: {
   deadline?: Date;
   estimatedDuration?: number;
   category?: string;
+  goalId?: string;
 }) {
   const userId = await getUserId();
   const task = await prisma.task.create({

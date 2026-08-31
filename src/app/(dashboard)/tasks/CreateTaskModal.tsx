@@ -15,8 +15,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createTask } from "@/actions/task.actions";
+import { Goal } from "@prisma/client";
 
-export default function CreateTaskModal() {
+export default function CreateTaskModal({ goals }: { goals?: Goal[] }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -27,9 +28,14 @@ export default function CreateTaskModal() {
     const formData = new FormData(e.currentTarget);
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
+    const goalId = formData.get("goalId") as string;
     
     try {
-      await createTask({ title, description });
+      await createTask({ 
+        title, 
+        description,
+        goalId: goalId || undefined
+      });
       setOpen(false);
     } catch (err) {
       console.error(err);
@@ -62,6 +68,19 @@ export default function CreateTaskModal() {
               <Label htmlFor="description">Description (Optional)</Label>
               <Input id="description" name="description" placeholder="Additional details..." />
             </div>
+            {goals && goals.length > 0 && (
+              <div className="grid gap-2">
+                <Label htmlFor="goalId">Link to Goal (Optional)</Label>
+                <select 
+                  id="goalId" 
+                  name="goalId" 
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="">-- No Goal --</option>
+                  {goals.map(g => <option key={g.id} value={g.id}>{g.title}</option>)}
+                </select>
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button type="submit" disabled={loading}>

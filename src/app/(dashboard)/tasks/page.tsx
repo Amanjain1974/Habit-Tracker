@@ -1,9 +1,11 @@
 import { getTasks } from "@/actions/task.actions";
+import { getGoals } from "@/actions/goal.actions";
 import TaskListClient from "./TaskListClient";
 import CreateTaskModal from "./CreateTaskModal";
 
 export default async function TasksPage() {
   const tasks = await getTasks();
+  const goals = await getGoals();
 
   return (
     <div className="space-y-6">
@@ -12,7 +14,7 @@ export default async function TasksPage() {
           <h1 className="text-3xl font-bold tracking-tight">Tasks</h1>
           <p className="text-muted-foreground mt-2">Manage your to-do list and focus on what matters.</p>
         </div>
-        <CreateTaskModal />
+        <CreateTaskModal goals={goals} />
       </div>
 
       <TaskListClient initialTasks={tasks} />
