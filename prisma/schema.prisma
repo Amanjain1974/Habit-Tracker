@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  mobile        String?   @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  tasks         Task[]
+  habits        Habit[]
+  goals         Goal[]
+  timeLogs      TimeLog[]
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  
+  // Matrix Columns
+  // 1: Important + Urgent, 2: Important + Not Urgent, 3: Not Important + Urgent, 4: Not Important + Not Urgent
+  matrixColumn Int      @default(2) // Default to Schedule
+  
+  priority    String?   // HIGH, MEDIUM, LOW
+  
+  deadline    DateTime?
+  estimatedDuration Int? // in minutes
+  actualDuration    Int? // in minutes
+  
+  status      String    @default("TODO") // TODO, IN_PROGRESS, COMPLETED, POSTPONED, CANCELLED
+  category    String?
+  
+  postponeCount Int     @default(0)
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+
+  // Relations
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  goalId      String?
+  goal        Goal?     @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  
+  habitId     String?
+  habit       Habit?    @relation(fields: [habitId], references: [id], onDelete: SetNull)
+}
+
+model Habit {
+  id          String    @id @default(cuid())
+  title       String
+  category    String?
+  
+  frequency   String    // DAILY, WEEKLY, CUSTOM
+  customDays  String?   // e.g. "Mon,Wed,Fri"
+  
+  targetCount Int?      // e.g., 30 days
+  
+  startDate   DateTime?
+  endDate     DateTime?
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  goalId      String?
+  goal        Goal?     @relation(fields: [goalId], references: [id], onDelete: SetNull)
+
+  tasks       Task[]
+  logs        HabitLog[]
+}
+
+model HabitLog {
+  id          String    @id @default(cuid())
+  habitId     String
+  habit       Habit     @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  date        DateTime  // The day this was completed
+  completed   Boolean   @default(true)
+  
+  createdAt   DateTime  @default(now())
+}
+
+model Goal {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  level       String    // LONG_TERM, MEDIUM_TERM, SHORT_TERM
+  targetDate  DateTime?
+  progress    Int       @default(0) // percentage
+  status      String    @default("ACTIVE") // ACTIVE, COMPLETED, ARCHIVED
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tasks       Task[]
+  habits      Habit[]
+}
+
+model TimeLog {
+  id          String    @id @default(cuid())
+  activity    String
+  startTime   DateTime
+  endTime     DateTime?
+  duration    Int?      // in minutes
+  category    String?
+  productivityRating Int? // 1-5 scale
+  notes       String?
+
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime  @default(now())
+}
