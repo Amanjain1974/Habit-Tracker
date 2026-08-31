@@ -69,6 +69,16 @@ export async function postponeTask(id: string) {
   return task;
 }
 
+export async function updateTaskColumn(id: string, columnId: number) {
+  const userId = await getUserId();
+  const task = await prisma.task.update({
+    where: { id, userId },
+    data: { matrixColumn: columnId }
+  });
+  revalidatePath("/priority");
+  return task;
+}
+
 export async function deleteTask(id: string) {
   const userId = await getUserId();
   await prisma.task.delete({
