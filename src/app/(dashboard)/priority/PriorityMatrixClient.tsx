@@ -26,10 +26,10 @@ import { Column } from "./Column";
 import { TaskCard } from "./TaskCard";
 
 const COLUMNS = [
-  { id: 1, title: "Do Now", subtitle: "Important & Urgent", border: "border-red-500/50", bg: "bg-red-500/10" },
-  { id: 2, title: "Schedule", subtitle: "Important, Not Urgent", border: "border-blue-500/50", bg: "bg-blue-500/10" },
-  { id: 3, title: "Delegate", subtitle: "Urgent, Not Important", border: "border-orange-500/50", bg: "bg-orange-500/10" },
-  { id: 4, title: "Eliminate", subtitle: "Not Important, Not Urgent", border: "border-gray-500/50", bg: "bg-gray-500/10" },
+  { id: 1, title: "Do Now", subtitle: "Important & Urgent", border: "border-destructive/30", bg: "bg-destructive/5" },
+  { id: 2, title: "Schedule", subtitle: "Important, Not Urgent", border: "border-primary/30", bg: "bg-primary/5" },
+  { id: 3, title: "Delegate", subtitle: "Urgent, Not Important", border: "border-warning/30", bg: "bg-warning/5" },
+  { id: 4, title: "Eliminate", subtitle: "Not Important, Not Urgent", border: "border-border", bg: "bg-muted/30" },
 ];
 
 export default function PriorityMatrixClient({ initialTasks }: { initialTasks: Task[] }) {
