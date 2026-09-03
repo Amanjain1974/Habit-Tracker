@@ -21,10 +21,44 @@ export async function getGoals() {
       },
       habits: {
         select: { id: true }
-      }
+      },
+      milestones: true
     },
     orderBy: { createdAt: 'desc' }
   });
+}
+
+export async function toggleMilestone(milestoneId: string, done: boolean) {
+  const userId = await getUserId();
+  // Ensure the milestone belongs to user's goal
+  const milestone = await prisma.goalMilestone.findFirst({
+    where: { id: milestoneId, goal: { userId } }
+  });
+  if (!milestone) throw new Error("Not found");
+  
+  await prisma.goalMilestone.update({
+    where: { id: milestoneId },
+    data: { done }
+  });
+  
+  // Update goal progress automatically based on milestones if desired, 
+  // or just leave it for now and calculate on frontend
+  revalidatePath("/goals");
+}
+
+export async function createMilestone(goalId: string, title: string) {
+  const userId = await getUserId();
+  const goal = await prisma.goal.findUnique({ where: { id: goalId, userId }});
+  if (!goal) throw new Error("Goal not found");
+  
+  const m = await prisma.goalMilestone.create({
+    data: {
+      title,
+      goalId
+    }
+  });
+  revalidatePath("/goals");
+  return m;
 }
 
 export async function createGoal(data: {
