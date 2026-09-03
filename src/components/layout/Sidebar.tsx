@@ -30,13 +30,12 @@ const primaryNavItems = [
   { title: "Matrix", href: "/priority", icon: Grid2X2 },
   { title: "Habits", href: "/habits", icon: CalendarDays },
   { title: "Goals", href: "/goals", icon: Target },
-  { title: "Journal", href: "/journal", icon: FileText },
+  { title: "Time Log", href: "/timelog", icon: Clock },
 ];
 
 const secondaryNavItems = [
   { title: "Analytics", href: "/analytics", icon: BarChart3 },
   { title: "Coach", href: "/review", icon: MessageSquare },
-  { title: "Focus", href: "/timelog", icon: Clock },
 ];
 
 export function Sidebar() {

@@ -7,6 +7,7 @@ import { CheckCircle2, Flame, Target } from "lucide-react";
 import Link from "next/link";
 import { format, isSameDay } from "date-fns";
 import TopPrioritiesClient from "./TopPrioritiesClient";
+import { IdeasWidget } from "@/components/widgets/IdeasWidget";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -65,18 +66,24 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* TOP PRIORITIES */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold flex items-center gap-2 text-foreground">
-            Top Priorities
-          </h2>
-          <Link href="/priority" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-            Matrix →
-          </Link>
+      {/* MIDDLE SECTION: PRIORITIES & IDEAS */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold flex items-center gap-2 text-foreground font-serif">
+              Top Priorities
+            </h2>
+            <Link href="/priority" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+              Matrix →
+            </Link>
+          </div>
+          <div>
+            <TopPrioritiesClient initialPriorities={topPriorities} />
+          </div>
         </div>
-        <div>
-          <TopPrioritiesClient initialPriorities={topPriorities} />
+        
+        <div className="lg:col-span-1">
+          <IdeasWidget />
         </div>
       </div>
 

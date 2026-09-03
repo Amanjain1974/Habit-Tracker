@@ -6,7 +6,7 @@ import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterv
 import { ChevronLeft, ChevronRight, Flame, Trophy } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { toggleHabitCompletion } from "@/actions/habit.actions";
+import { toggleHabitLog } from "@/actions/habit.actions";
 
 type HabitWithLogs = Habit & { logs: HabitLog[] };
 
@@ -56,7 +56,7 @@ export default function HabitGridClient({ initialHabits }: { initialHabits: Habi
 
     try {
       // Server Action
-      await toggleHabitCompletion(habitId, date);
+      await toggleHabitLog(habitId, date.toISOString());
     } catch (e) {
       toast.error("Failed to update habit.");
       setHabits(previousHabits); // Rollback
