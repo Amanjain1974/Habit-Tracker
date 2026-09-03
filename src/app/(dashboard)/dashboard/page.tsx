@@ -7,7 +7,6 @@ import { CheckCircle2, Flame, Target } from "lucide-react";
 import Link from "next/link";
 import { format, isSameDay } from "date-fns";
 import TopPrioritiesClient from "./TopPrioritiesClient";
-import HeroClient from "./HeroClient";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -54,62 +53,63 @@ export default async function DashboardPage() {
   const productivityScore = Math.min(100, Math.round((finishRate + habitPercentage + (focusTimeMins > 120 ? 100 : (focusTimeMins/120)*100)) / 3)) || 0;
 
   return (
-    <div className="space-y-12 pb-12 max-w-6xl mx-auto overflow-x-hidden">
+    <div className="space-y-12 pb-12 max-w-5xl mx-auto overflow-x-hidden">
       
-      {/* 3D HERO SECTION */}
-      <HeroClient 
-        greeting={greeting} 
-        firstName={firstName} 
-        activeTaskCount={activeTasks.length} 
-        finishRate={finishRate} 
-      />
+      {/* HEADER */}
+      <div className="py-8">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          {greeting}, {firstName}
+        </h1>
+        <p className="text-muted-foreground mt-2 text-sm font-medium">
+          {activeTasks.length} active tasks • {habitPercentage}% habit consistency
+        </p>
+      </div>
 
       {/* TOP PRIORITIES */}
-      <div className="animate-fade-in-up stagger-2">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold flex items-center gap-2 text-foreground">
-            <Flame className="h-5 w-5 text-primary" /> Finish These First
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold flex items-center gap-2 text-foreground">
+            Top Priorities
           </h2>
           <Link href="/priority" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-            Command Center →
+            Matrix →
           </Link>
         </div>
-        <div className="p-1">
+        <div>
           <TopPrioritiesClient initialPriorities={topPriorities} />
         </div>
       </div>
 
       {/* SECONDARY METRICS */}
-      <div className="grid md:grid-cols-3 gap-6 animate-fade-in-up stagger-3">
+      <div className="grid md:grid-cols-3 gap-6">
         {/* Habit Card */}
-        <div className="rounded-2xl p-6 bg-card border border-border/50 hover-tilt flex flex-col justify-between">
+        <div className="rounded-xl p-6 bg-card border border-border flex flex-col justify-between shadow-sm">
           <div>
-            <h3 className="font-semibold text-sm text-muted-foreground tracking-wide uppercase mb-1">Consistency</h3>
-            <p className="text-3xl font-bold">{habitPercentage}%</p>
+            <h3 className="font-semibold text-xs text-muted-foreground tracking-wide uppercase mb-1">Consistency</h3>
+            <p className="text-2xl font-bold">{habitPercentage}%</p>
           </div>
           <div className="mt-6 w-full bg-secondary rounded-full h-1.5 overflow-hidden">
-            <div className="bg-gradient-to-r from-primary to-[#22D3EE] h-full rounded-full" style={{ width: `${habitPercentage}%`, transition: 'width 1s ease-out' }} />
+            <div className="bg-primary h-full rounded-full transition-all duration-500" style={{ width: `${habitPercentage}%` }} />
           </div>
         </div>
 
         {/* Focus Card */}
-        <div className="rounded-2xl p-6 bg-card border border-border/50 hover-tilt flex flex-col justify-between">
+        <div className="rounded-xl p-6 bg-card border border-border flex flex-col justify-between shadow-sm">
           <div>
-            <h3 className="font-semibold text-sm text-muted-foreground tracking-wide uppercase mb-1">Deep Work</h3>
-            <p className="text-3xl font-bold">{focusTimeHours}<span className="text-lg text-muted-foreground font-medium">h</span> {focusTimeRemainingMins}<span className="text-lg text-muted-foreground font-medium">m</span></p>
+            <h3 className="font-semibold text-xs text-muted-foreground tracking-wide uppercase mb-1">Deep Work</h3>
+            <p className="text-2xl font-bold">{focusTimeHours}<span className="text-base text-muted-foreground font-medium">h</span> {focusTimeRemainingMins}<span className="text-base text-muted-foreground font-medium">m</span></p>
           </div>
           <div className="mt-6 flex items-center gap-2">
-            <div className={`h-2 w-2 rounded-full ${focusTimeMins > 0 ? 'bg-success animate-pulse-glow' : 'bg-muted-foreground'}`} />
+            <div className={`h-2 w-2 rounded-full ${focusTimeMins > 0 ? 'bg-primary' : 'bg-muted-foreground/30'}`} />
             <span className="text-xs font-medium text-muted-foreground">{focusTimeMins > 0 ? 'Active Focus Today' : 'Awaiting Session'}</span>
           </div>
         </div>
 
         {/* Coach Insight */}
-        <div className="rounded-2xl p-6 bg-primary/5 border border-primary/20 hover-tilt flex flex-col justify-between relative overflow-hidden">
-          <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl" />
+        <div className="rounded-xl p-6 bg-card border border-border flex flex-col justify-between shadow-sm">
           <div>
-            <h3 className="font-semibold text-sm text-primary tracking-wide uppercase mb-2">Coach Insight</h3>
-            <p className="text-sm font-medium leading-relaxed">
+            <h3 className="font-semibold text-xs text-muted-foreground tracking-wide uppercase mb-2">Coach Insight</h3>
+            <p className="text-sm font-medium text-foreground/80 leading-relaxed">
               {finishRate > 80 ? "Outstanding momentum. Rest is productive too." 
                 : "Try breaking your top priority into a 25-minute focus session."}
             </p>

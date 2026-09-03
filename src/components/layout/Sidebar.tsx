@@ -17,6 +17,7 @@ import {
   MessageSquare,
   FileText,
   ChevronLeft,
+  ChevronRight,
   User,
   Moon
 } from "lucide-react";
@@ -29,13 +30,13 @@ const primaryNavItems = [
   { title: "Matrix", href: "/priority", icon: Grid2X2 },
   { title: "Habits", href: "/habits", icon: CalendarDays },
   { title: "Goals", href: "/goals", icon: Target },
-  { title: "Focus", href: "/timelog", icon: Clock },
+  { title: "Journal", href: "/journal", icon: FileText },
 ];
 
 const secondaryNavItems = [
   { title: "Analytics", href: "/analytics", icon: BarChart3 },
   { title: "Coach", href: "/review", icon: MessageSquare },
-  { title: "Notes", href: "/notes", icon: FileText },
+  { title: "Focus", href: "/timelog", icon: Clock },
 ];
 
 export function Sidebar() {
@@ -66,10 +67,10 @@ export function Sidebar() {
       </button>
 
       <div className={`flex items-center mb-8 transition-all ${collapsed ? 'justify-center' : 'px-2'}`}>
-        <div className="h-6 w-6 rounded bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shrink-0">
-          F
+        <div className="h-6 w-6 rounded bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shrink-0 font-serif">
+          M
         </div>
-        {!collapsed && <h1 className="text-lg font-bold tracking-tight text-foreground ml-3 truncate">FINISH IT</h1>}
+        {!collapsed && <h1 className="text-lg font-bold tracking-tight text-foreground ml-3 truncate font-serif">Momentum</h1>}
       </div>
       
       <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-8 scrollbar-none">

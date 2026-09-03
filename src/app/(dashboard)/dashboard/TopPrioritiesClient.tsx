@@ -25,12 +25,12 @@ export default function TopPrioritiesClient({ initialPriorities }: { initialPrio
   return (
     <div className="space-y-3">
       {initialPriorities.map((task, index) => (
-        <div key={task.id} className="flex items-center gap-4 p-4 border rounded-lg bg-background hover:border-red-500/50 transition-colors">
-          <div className="font-bold text-2xl text-muted-foreground w-6 text-center">
+        <div key={task.id} className="flex items-center gap-4 p-4 border border-border rounded-lg bg-card shadow-sm hover:border-primary/50 transition-colors">
+          <div className="font-bold text-2xl text-muted-foreground w-6 text-center font-serif">
             {index + 1}
           </div>
           <Checkbox 
-            className="h-6 w-6 rounded-full data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500" 
+            className="h-6 w-6 rounded-full data-[state=checked]:bg-primary data-[state=checked]:border-primary" 
             checked={false} 
             onCheckedChange={() => handleToggle(task)}
             disabled={loadingId === task.id}
