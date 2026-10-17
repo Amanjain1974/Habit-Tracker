@@ -119,7 +119,7 @@ export default function InteractiveAnalyticsClient({
                 <YAxis tickLine={false} axisLine={false} tick={{fontSize: 10, fill: 'hsl(var(--muted-foreground))'}} tickFormatter={(val) => `${val}%`} />
                 <RechartsTooltip 
                   contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))', backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--foreground))' }}
-                  formatter={(value: number) => [`${value}%`, 'Completion']}
+                  formatter={(value: any) => [`${value}%`, 'Completion']}
                   labelFormatter={(label) => `Date: ${label}`}
                 />
                 <Area 
@@ -195,7 +195,7 @@ export default function InteractiveAnalyticsClient({
                     ))}
                   </Pie>
                   <RechartsTooltip 
-                    formatter={(val: number) => [`${Math.round(val/60)}h ${val%60}m`, 'Time']}
+                    formatter={(val: any) => [`${Math.round(Number(val)/60)}h ${Number(val)%60}m`, 'Time']}
                     contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))', backgroundColor: 'hsl(var(--card))' }}
                   />
                   <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ fontSize: '11px', paddingTop: '20px' }} />

@@ -7,8 +7,8 @@ import { revalidatePath } from "next/cache";
 
 async function getUserId() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
-  return session.user.id;
+  if (!(session?.user as any)?.id) throw new Error("Unauthorized");
+  return (session!.user as any).id as string;
 }
 
 export async function getTimeLogs() {
@@ -24,17 +24,19 @@ export async function createTimeLog(data: {
   category?: string;
   duration?: number; // in minutes
   startTime: Date;
-  endTime: Date;
+  endTime?: Date;
   productivityRating?: number;
   notes?: string;
 }) {
   const userId = await getUserId();
   
-  const duration = data.duration || Math.round((data.endTime.getTime() - data.startTime.getTime()) / 60000);
+  const end = data.endTime || new Date(data.startTime.getTime() + (data.duration || 60) * 60000);
+  const duration = data.duration || Math.round((end.getTime() - data.startTime.getTime()) / 60000);
 
   const log = await prisma.timeLog.create({
     data: {
       ...data,
+      endTime: end,
       duration,
       userId,
     }

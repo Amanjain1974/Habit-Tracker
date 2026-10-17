@@ -1,15 +1,21 @@
-export { default } from "next-auth/middleware";
+import { withAuth } from "next-auth/middleware";
+
+export default withAuth({
+  pages: {
+    signIn: "/login",
+  },
+});
 
 export const config = {
   matcher: [
-    "/dashboard",
-    "/tasks",
-    "/priority",
-    "/habits",
-    "/goals",
-    "/timelog",
-    "/analytics",
-    "/review",
-    "/notes"
-  ]
+    "/dashboard/:path*",
+    "/tasks/:path*",
+    "/priority/:path*",
+    "/habits/:path*",
+    "/goals/:path*",
+    "/timelog/:path*",
+    "/analytics/:path*",
+    "/review/:path*",
+    "/notes/:path*",
+  ],
 };

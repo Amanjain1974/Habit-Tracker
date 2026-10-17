@@ -124,8 +124,8 @@ function TaskRow({ task, isCompleted = false, onUpdate, onRemove }: { task: Task
         
         {/* Badges / Metadata */}
         <div className="flex items-center gap-3 text-[10px] uppercase font-bold tracking-wider text-muted-foreground shrink-0">
-          {task.category && (
-            <span className="px-2 py-0.5 bg-secondary border border-border/50 rounded-md">{task.category}</span>
+          {(task as any).category && (
+            <span className="px-2 py-0.5 bg-secondary border border-border/50 rounded-md">{(task as any).category}</span>
           )}
           {task.estimatedDuration && (
             <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {task.estimatedDuration}m</span>

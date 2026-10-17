@@ -7,8 +7,8 @@ import { revalidatePath } from "next/cache";
 
 async function getUserId() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
-  return session.user.id;
+  if (!(session?.user as any)?.id) throw new Error("Unauthorized");
+  return (session!.user as any).id as string;
 }
 
 export async function getTasks() {
@@ -28,11 +28,13 @@ export async function createTask(data: {
   estimatedDuration?: number;
   category?: string;
   goalId?: string;
+  status?: string;
 }) {
   const userId = await getUserId();
+  const { category, ...rest } = data;
   const task = await prisma.task.create({
     data: {
-      ...data,
+      ...rest,
       userId,
     }
   });

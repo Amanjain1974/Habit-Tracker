@@ -53,7 +53,7 @@ export function TaskCard({ task }: { task: Task }) {
         <div className="flex-1 min-w-0">
           <p className="font-semibold leading-tight">{task.title}</p>
           <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-            {task.category && <span className="bg-secondary px-1.5 py-0.5 rounded text-[10px] uppercase font-bold">{task.category}</span>}
+            {(task as any).category && <span className="bg-secondary px-1.5 py-0.5 rounded text-[10px] uppercase font-bold">{(task as any).category}</span>}
             {task.estimatedDuration && <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {task.estimatedDuration}m</span>}
           </div>
         </div>

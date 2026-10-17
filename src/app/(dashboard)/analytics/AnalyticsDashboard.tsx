@@ -59,7 +59,7 @@ export default function AnalyticsDashboard({ chartData }: { chartData: { name: s
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => [`${value} mins`, 'Duration']} />
+                <Tooltip formatter={(value: any) => [`${value} mins`, 'Duration']} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>

@@ -22,7 +22,7 @@ export default function HabitGridClient({ initialHabits }: { initialHabits: Habi
   // Group days into weeks (assuming week starts on Monday or Sunday depending on standard, let's use standard ISO or simple slice)
   // For spreadsheet styling, often they just group 7 days at a time from the 1st.
   // "columns = days grouped into weeks (Week 1–5)"
-  const weeks = [];
+  const weeks: Date[][] = [];
   for (let i = 0; i < daysInMonth.length; i += 7) {
     weeks.push(daysInMonth.slice(i, i + 7));
   }
@@ -197,7 +197,7 @@ export default function HabitGridClient({ initialHabits }: { initialHabits: Habi
                         return (
                           <div key={wIndex} className="flex-1 flex flex-col gap-1 items-center justify-center">
                             <div className="flex gap-1.5 w-full justify-center">
-                              {week.map(day => {
+                              {week.map((day: Date) => {
                                 const isChecked = habit.logs.some(l => isSameDay(new Date(l.date), day) && l.completed);
                                 return (
                                   <div key={day.toISOString()} className="w-8 flex justify-center">

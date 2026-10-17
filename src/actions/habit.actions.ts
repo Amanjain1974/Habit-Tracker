@@ -7,8 +7,8 @@ import { revalidatePath } from "next/cache";
 
 async function getUserId() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
-  return session.user.id;
+  if (!(session?.user as any)?.id) throw new Error("Unauthorized");
+  return (session!.user as any).id as string;
 }
 
 export async function getHabits() {
@@ -31,9 +31,10 @@ export async function createHabit(data: {
   targetCount?: number;
 }) {
   const userId = await getUserId();
+  const { category, ...rest } = data;
   const habit = await prisma.habit.create({
     data: {
-      ...data,
+      ...rest,
       userId,
     }
   });
