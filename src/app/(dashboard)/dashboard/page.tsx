@@ -2,7 +2,7 @@ import { getTasks } from "@/actions/task.actions";
 import { getHabits } from "@/actions/habit.actions";
 import { getTimeLogs } from "@/actions/timelog.actions";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { CheckCircle2, Flame, Target } from "lucide-react";
 import Link from "next/link";
 import { format, isSameDay } from "date-fns";
